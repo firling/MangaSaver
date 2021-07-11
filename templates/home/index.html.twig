@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+
+<div class="container mt-5">
+    {% if warning != "" %}
+        <div class="alert alert-warning">{{ warning }}</div>
+    {% elseif success != "" %}
+        <div class="alert alert-success">{{ success }}</div>
+    {% endif %}
+
+    <div class="container mb-5">
+        <input type="text" class="form-control" id="search" placeholder="Search for a manga">
+    </div>
+
+    <table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Episode Num</th>
+            <th scope="col">action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for manga in mangas %}
+            <tr id="table_row">
+                <th scope="row">{{ manga.id }}</th>
+                <td id="name_value">{{ manga.name }}</td>
+                <td><a id="ep_num" href="{{ manga.getEpisodeUrl() }}" target="_blank">{{ manga.getEpisodeNum() }}</a></td>
+                <td>
+                    <button type="button" id="update" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#updateModal">
+                        update
+                    </button>
+                    <a href="{{ path('delete', {id: manga.id}) }}" class="btn btn-outline-danger btn-sm">
+                        delete
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateModalLabel">Update <strong id="manga_name"></strong></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="post" action="{{ path('update') }}">
+        <div class="modal-body">
+            <input type="hidden" name="id" id="id"/>
+            <div class="mb-3">
+                <label for="episode_num" class="form-label">Episode number</label>
+                <input type="number" class="form-control" id="episode_num" name="episode_num"/>
+            </div>
+            <div class="mb-3">
+                <label for="episode_url" class="form-label">Episode URL</label>
+                <input type="text" class="form-control" id="episode_url" name="episode_url"/>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="auto_update_url" name="auto_update_url">
+                <label class="form-check-label" for="auto_update_url">Auto Update URL</label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+    $( document ).ready(function() {
+        $("button#update").click(function() {
+            const tr = $(this).parent().parent();
+            const a = tr.find('#ep_num');
+            const episodeNum = a.text();
+            const episodeUrl = a.attr('href');
+            const id = tr.find('th').text();
+            const name = tr.find('#name_value').text();
+            console.log(episodeNum)
+
+            $('#id').val(id);
+            $('#episode_num').val(episodeNum);
+            $('#episode_url').val(episodeUrl);
+            $('#manga_name').text(name);
+        })
+        $("#search").on('input', () => {
+            $('tr#table_row').each(function(index) {
+                if ($(this).find('#name_value').text().toLowerCase().includes($('#search').val())) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            })
+        });
+    })
+</script>
+
+{% endblock %}

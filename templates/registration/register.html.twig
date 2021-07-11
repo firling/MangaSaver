@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+<style>
+.login-form {
+    width: 340px;
+    margin: 50px auto;
+  	font-size: 15px;
+}
+.login-form form {
+    margin-bottom: 15px;
+    background: #f7f7f7;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+}
+.login-form h2 {
+    margin: 0 0 15px;
+}
+.form-control, .btn {
+    min-height: 38px;
+    border-radius: 2px;
+}
+.btn {        
+    font-size: 15px;
+    font-weight: bold;
+}
+</style>
+{# <h1>Register</h1>
+
+{{ form_start(registrationForm) }}
+    {{ form_row(registrationForm.email) }}
+    {{ form_row(registrationForm.plainPassword, {
+        label: 'Password'
+    }) }}
+    {{ form_row(registrationForm.agreeTerms) }}
+
+    <button type="submit" class="btn btn-lg btn-primary">Register</button>
+{{ form_end(registrationForm) }} #}
+
+<div class="login-form">
+    {{ form_start(registrationForm) }}
+        <h2 class="text-center">Register</h2>       
+        <div class="mb-3">
+            {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control', 'placeholder': 'Email'}}) }}
+            <div class="form-error text-danger">
+                {{ form_errors(registrationForm.email) }}
+            </div>
+        </div>
+        <div class="mb-3">
+            {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control', 'placeholder': 'Password'}}) }}
+            <div class="form-error text-danger">
+                {{ form_errors(registrationForm.plainPassword) }}
+            </div>
+        </div>
+
+
+        
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary btn-block">Register</button>
+        </div>
+        <div class="clearfix">
+            <label class="float-left form-check-label">{{ form_widget(registrationForm.agreeTerms) }} Agree terms</label>
+        </div>        
+    {{ form_end(registrationForm) }}
+    <p class="text-center">Already have an account? <a href="{{ path('app_login') }}">Log in</a></p>
+</div>
+{% endblock %}
